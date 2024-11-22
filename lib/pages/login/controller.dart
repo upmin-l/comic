@@ -63,7 +63,6 @@ class LoginPageController extends GetxController {
 
 
   ///注册
-
   Future register(context)async{
     var deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
