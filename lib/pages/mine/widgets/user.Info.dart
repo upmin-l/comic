@@ -1,6 +1,7 @@
 
 // 用户界面
 import 'package:bruno/bruno.dart';
+import 'package:comic/app_theme.dart';
 import 'package:comic/public.models.dart';
 import 'package:comic/routers/index.dart';
 import 'package:flutter/material.dart';
@@ -58,10 +59,38 @@ Widget userInfo(context,UserModel data,bool isLogin) {
                   ),
                   const SizedBox(height: 8.0),
                   Text(data.user, style: TextStyle(fontSize: 14.sp)),
+                  const SizedBox(height: 4.0),
+                  /// 账号未激活显示
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.sp),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image(
+                          image:  const AssetImage('assets/images/warn.png'),
+                          width: 16.sp,
+                          height: 16.sp,
+                        ),
+                        const SizedBox(width: 4.0),
+                        const Text('账号未激活'),
+                        const SizedBox(width: 4.0),
+                        OutlinedButton(
+                          onPressed: () {  },
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                            side: const BorderSide(width: 2, color: AppColor.red),
+                          ),
+                          child: const Text('点击激活'),
+
+                        )
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
-            const SizedBox(height: 20),
             // SizedBox(
             //   height: 40.0,
             //   child: Row(

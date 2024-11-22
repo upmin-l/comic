@@ -41,9 +41,10 @@ class LoginServices extends GetConnect {
     String user,
     String paw,
     String belong,
+      String device_id,
   ) async {
     String url = '/user/register';
-    final res = await post(url, {"user": user, "paw": paw, 'belong': belong});
+    final res = await post(url, {"user": user, "paw": paw, 'belong': belong,'d':device_id});
     print(res.body);
     if (res.hasError) return Future.error(Exception(res.statusCode));
     return ResponseModel.fromJson(res.body);

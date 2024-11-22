@@ -66,20 +66,36 @@ class LoginPageController extends GetxController {
   Future register(context)async{
     var deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    print(androidInfo.id);
-    return;
     if(pinPut!='1'){
-      loginServices.register(registerEmailController.text, registerPawController.text, pinPut).then((value) {
-        if(value.code==200){
-          pinPut = '';
-          BrnToast.show(value.msg, context);
-          Navigator.pop(context);
-        }else{
-          BrnToast.show(value.msg, context);
+      try{
+        String deviceId = '';
+        if (Theme.of(context).platform == TargetPlatform.android) {
+          // Android
+          AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+          deviceId = androidInfo.id; // 获取Android设备ID
+        } else if (Theme.of(context).platform == TargetPlatform.iOS) {
+          // iOS
+          IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+          deviceId = iosInfo.identifierForVendor ?? ''; // 获取iOS设备唯一标识
         }
-      }).catchError((e){
+
+        loginServices.register(registerEmailController.text, registerPawController.text, pinPut,deviceId).then((value) {
+          if(value.code==200){
+            pinPut = '';
+            BrnToast.show(value.msg, context);
+            Navigator.pop(context);
+          }else{
+            BrnToast.show(value.msg, context);
+          }
+        }).catchError((e){
+          BrnToast.show('注册失败！$e', context);
+        });
+
+      }catch(e){
         BrnToast.show('注册失败！$e', context);
-      });
+      }
+    }else{
+      BrnToast.show('请输入邀请码！', context);
     }
   }
 

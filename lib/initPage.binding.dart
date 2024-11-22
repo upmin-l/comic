@@ -12,6 +12,7 @@ class InitPageBinding extends Bindings {
   void dependencies() {
     Get.lazyPut(() => InitPageController());
     Get.lazyPut(() => AppGlobalServices());
+    Get.lazyPut(() => BookshelfPageController());
     Get.lazyPut(() => ComicServices());
     Get.lazyPut(() => Comic18Services());
   }

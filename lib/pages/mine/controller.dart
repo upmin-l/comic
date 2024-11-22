@@ -1,5 +1,7 @@
 import 'package:bruno/bruno.dart';
 import 'package:comic/global.dart';
+import 'package:comic/initPage.controller.dart';
+import 'package:comic/pages/bookshelf/index.dart';
 import 'package:comic/public.models.dart';
 import 'package:comic/services.dart';
 import 'package:comic/utils/dialog.dart';
@@ -11,6 +13,8 @@ import 'package:url_launcher/url_launcher.dart';
 class MinePageController extends GetxController {
   MinePageController();
   final appGlobalServices = Get.find<AppGlobalServices>();
+  final initPageController = Get.find<InitPageController>();
+  final bookshelfPageController = Get.find<BookshelfPageController>();
   late List<MineList> mineList = [
     MineList(name: '设置', icon: Icons.settings_suggest, key: 0),
     MineList(name: '账号信息', icon: Icons.manage_accounts, key: 1),
@@ -87,6 +91,9 @@ class MinePageController extends GetxController {
         UserData.getInstance.clear();
         isLogin = false;
         BrnToast.show("退出成功！", context);
+        bookshelfPageController.updateUserData();
+        ///当退出登录后进行锁定，不能跳到阅读页面
+        initPageController.isFirstTime = false;
         Navigator.pop(context);
         Navigator.pop(context);
         initData();
