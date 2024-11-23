@@ -33,6 +33,5 @@ class BookshelfPageController extends GetxController{
       }
     });
 
-    bookFocusNode.unfocus();
   }
 }

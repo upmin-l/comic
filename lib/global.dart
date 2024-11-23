@@ -2,7 +2,7 @@
 import 'dart:async';
 
 import 'package:comic/public.models.dart';
-import 'package:get_storage/get_storage.dart';
+  import 'package:get_storage/get_storage.dart';
 
 const String globalBaseUrl = 'http://192.168.1.7:3000';
 

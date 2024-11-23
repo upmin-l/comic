@@ -57,9 +57,12 @@ class ComicResponse {
     return ComicResponse(
       code: json['code'],
       msg: json['msg'],
-      data: (json['data'] as List<dynamic>)
-          .map((item) => Comic18Item.fromJson(item))
-          .toList(),
+      // 判断 data 是否为空对象，如果是则赋值为空列表
+      data: (json['data'] is List)
+          ? (json['data'] as List)
+              .map((item) => Comic18Item.fromJson(item))
+              .toList()
+          : [], // 如果 data 是空对象，则返回空列表
     );
   }
 }
@@ -190,7 +193,10 @@ class ComicChapterListItem {
 
   factory ComicChapterListItem.fromJson(dynamic item) {
     return ComicChapterListItem(
-        text: item['text'], href: item['href'], comic_id: item['comic_id']);
+      text: item['text'] ?? '',
+      href: item['href'] ?? '',
+      comic_id: item['comic_id'] ?? '',
+    );
   }
 }
 
@@ -262,8 +268,8 @@ class UserModel {
       'user': user,
       'token': token,
       'authPhoto': authPhoto,
-      'id':id,
-      "type":type,
+      'id': id,
+      "type": type,
     };
   }
 }
@@ -313,3 +319,74 @@ class CustomerModel {
     );
   }
 }
+
+class SetComicStorageModel {
+  late String name;
+  late String topic_img;
+  late String type_names;
+  late String comic_id;
+  late String region;
+  late String chapter_name;
+  late String chapter_url;
+
+  SetComicStorageModel({
+    required this.name,
+    required this.topic_img,
+    required this.type_names,
+    required this.comic_id,
+    required this.region,
+    required this.chapter_name,
+    required this.chapter_url,
+  });
+
+  factory SetComicStorageModel.fromJson(dynamic item) {
+    return SetComicStorageModel(
+      name: item['name'] ?? '',
+      topic_img: item['topic_img'] ?? '',
+      type_names: item['type_names'] ?? '',
+      comic_id: item['comic_id'] ?? '',
+      region: item['region'] ?? '',
+      chapter_name: item['chapter_name'] ?? '',
+      chapter_url: item['chapter_url'] ?? '',
+    );
+  }
+  // 将参数转换为 Map
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'topic_img': topic_img,
+      'type_names': type_names,
+      'comic_id': comic_id.toString(),
+      'region': region.toString(),
+      'chapter_name': chapter_name,
+      'chapter_url': chapter_url,
+    };
+  }
+}
+
+// export class tokenDto {
+//   user: string
+//   id: string
+//   t: string
+// }
+
+class TokenModel {
+  late String user;
+  late String id;
+  late String t;
+
+  TokenModel({
+    required this.user,
+    required this.id,
+    required this.t,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'user': user,
+      'token': t,
+      'id': id,
+    };
+  }
+}
+

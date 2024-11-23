@@ -38,7 +38,7 @@ class BookshelfPage extends GetView<BookshelfPageController>{
                         ),
                         padding: const EdgeInsets.only(left: 12.0),
                         child: TextField(
-                          focusNode: controller.bookFocusNode,
+                          // focusNode: controller.bookFocusNode,
                           controller: controller.bookTextEditingController,
                           onSubmitted: (val) {
                             if (val != '') {
@@ -48,10 +48,10 @@ class BookshelfPage extends GetView<BookshelfPageController>{
                               BrnToast.show("请输入漫画名字搜索~", context);
                             }
                           },
-                          autofocus: true,
+                          autofocus: false,
                           cursorColor: AppColor.defaultColor,
                           decoration: InputDecoration(
-                            hintText: '请输入搜索内容',
+                            hintText: '搜索书架漫画',
                             hintStyle: TextStyle(
                               fontSize: 14.sp, // 或者使用你的字体大小
                               textBaseline: TextBaseline.alphabetic,

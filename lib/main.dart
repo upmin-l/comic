@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Res Comic',
           theme: themeData,
+          initialRoute: RouteNames.initPage,
           getPages: RoutePages.getPage,
         );
       },

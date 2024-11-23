@@ -1,8 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:bruno/bruno.dart';
+import 'package:comic/global.dart';
 import 'package:comic/initPage.controller.dart';
 import 'package:comic/public.models.dart';
 import 'package:comic/routers/index.dart';
+import 'package:comic/services.dart';
 import 'package:comic/utils/index.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,6 +20,7 @@ class Comic18ItemPageController extends GetxController
   TabController? chapterTab18Controller;
 
   final initPageController = Get.find<InitPageController>();
+  final appGlobalServices = Get.find<AppGlobalServices>();
 
   late final WebViewController webViewController;
   late String comicInfoState = '未知';
@@ -31,8 +36,18 @@ class Comic18ItemPageController extends GetxController
   /// 动态生成的 tabs 标签
   List<Tab> tabs18 = [];
 
-  bool isLoading = true; // 用于指示数据是否在加载
+  /// 用于指示数据是否在加载
+  bool isLoading = true;
 
+  ///标记用户是否已经登录，能获取到token
+  bool logOn = false;
+
+  ///漫画是否是收藏
+  RxBool isFavorite = false.obs;
+
+
+  /// 用户报错漫画 模型
+  SetComicStorageModel comicStorageModel = SetComicStorageModel.fromJson({});
 
   initData() {
     update(["comic18ItemPage"]);
@@ -42,14 +57,14 @@ class Comic18ItemPageController extends GetxController
   void onInit() {
     super.onInit();
     comicInfoState = comic18Item.serialize;
-
-    getChapter();
-    // TODO:读取数据，先看本地有没有token，请求后台，校验token是否过期，如果没有token，则账号还没开通
-    // getLocalStorage();
+    logOn = UserData.getInstance.userData?.token != null;
+    getChapter().then((value){
+      getComicStorage();
+    });
   }
 
-  getChapter() {
-    print(comic18Item.url);
+  Future getChapter() async {
+    final completer = Completer<void>(); // 创建 Completer
     webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..addJavaScriptChannel('get18Chapters',
@@ -61,10 +76,6 @@ class Comic18ItemPageController extends GetxController
                 (json) => ComicChapterListItem.fromJson(json))
             .toList();
         comic18Chapters.addAll(res);
-        btnObj.value = ComicChapterListItem(
-          text: btnObj.value.text, // 保持原来的 text
-          href: comic18Chapters[0].href, // 更新为新的 href
-        );
 
         /// 动态计算 tab有多少个
         tabs18.addAll(generateTabs(jsonMap));
@@ -87,6 +98,8 @@ class Comic18ItemPageController extends GetxController
         );
         isLoading = false;
         initData();
+
+        completer.complete(); // 标记任务完成
       })
       ..setNavigationDelegate(NavigationDelegate(onPageFinished: (controller) {
         webViewController.runJavaScript('''
@@ -108,6 +121,8 @@ class Comic18ItemPageController extends GetxController
             ''');
       }))
       ..loadRequest(Uri.parse(comic18Item.url));
+
+    return completer.future; // 等待任务完成
   }
 
   /// 点击章节跳转阅读
@@ -124,6 +139,48 @@ class Comic18ItemPageController extends GetxController
     );
   }
 
+  /// 获取单个漫画阅读历史
+  Future getComicStorage() async {
+    /// 先看是否登录
+    if(UserData.getInstance.userData?.token != null){
+      appGlobalServices.getComicStorage(comic18Item.id).then((value) {
+        if(value.href!=''){
+          btnObj.value = value;
+          isFavorite.value = true;
+        }else{
+          btnObj.value = ComicChapterListItem(
+            text: btnObj.value.text, // 保持原来的 text
+            href: comic18Chapters[0].href, // 更新为新的 href
+          );
+          isFavorite.value = false;
+        }
+      });
+      print('isFavorite.value${isFavorite.value}');
+    }else{
+
+    }
+  }
+
+  /// 接受阅读页面保存历史的回调函数
+  setStorage(ComicChapterListItem res){
+    btnObj.value = res;
+  }
+
+  /// 漫画收藏
+  Future setComicStorage(BuildContext context)async{
+    if(logOn){
+      comicStorageModel.name = comic18Item.name;
+      comicStorageModel.topic_img = comic18Item.pic;
+      comicStorageModel.comic_id = comic18Item.id;
+      comicStorageModel.chapter_name = btnObj.value.text;
+      comicStorageModel.chapter_url = btnObj.value.href;
+      appGlobalServices.setComicStorage(comicStorageModel).then((value){
+        BrnToast.show(value.msg, context);
+      });
+    }else{
+      BrnToast.show("请先登录再进行收藏该漫画！", context);
+    }
+  }
   @override
   void onClose() {
     chapterTab18Controller?.dispose();

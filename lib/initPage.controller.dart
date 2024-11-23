@@ -1,6 +1,7 @@
-
 import 'package:comic/global.dart';
 import 'package:comic/pages/index.dart';
+import 'package:comic/public.models.dart';
+import 'package:comic/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class InitPageController extends GetxController {
   Color bottomNavigationBarColor = Colors.white;
 
+  final appGlobalServices = Get.find<AppGlobalServices>();
   int currentIndex = 0;
 
   late SharedPreferences prefs;
@@ -36,7 +38,6 @@ class InitPageController extends GetxController {
     if (installTime == null) {
       prefs.setString('installTime', DateTime.now().toIso8601String());
     } else {
-
       Duration difference = DateTime.now().difference(installTime);
       print('$installTime ----$difference----${difference.inSeconds}');
       print(difference.inSeconds < 60);
@@ -69,6 +70,17 @@ class InitPageController extends GetxController {
         if (token != '') {
           ///设置取消校验是否第一次使用
           isFirstTime = true;
+          TokenModel tokenModel = TokenModel(
+            user: UserData.getInstance.userData?.user ?? '',
+            id: UserData.getInstance.userData?.id ?? '',
+            t: UserData.getInstance.userData?.token ?? '',
+          );
+          ///更新token
+          appGlobalServices.getValidateToken(tokenModel).then((value){
+            if(value.code == 200){
+              UserData.getInstance.setUserData = value.data;
+            }
+          });
         } else {
           ///校验是否是第一次使用
           checkFirstTime(token);

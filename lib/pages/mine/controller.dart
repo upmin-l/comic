@@ -102,9 +102,7 @@ class MinePageController extends GetxController {
   }
 
   /// 出来设置 账号信息等跳转
-
   Future<List<ListData>> handleFun(int id) async {
-    print(userData.id);
     if (id == 1) {
       return [
         ListData(name: '用户ID', msg: userData.id, id: 35),

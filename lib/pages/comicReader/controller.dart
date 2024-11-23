@@ -41,7 +41,6 @@ class ComicReaderPageController extends GetxController
 
   late final WebViewController webViewController;
 
-  var comic18Storage;
 
   ScrollController scrollController = ScrollController();
 
@@ -68,9 +67,7 @@ class ComicReaderPageController extends GetxController
     comicInfoState = args['comicInfoState'];
     comicReaders.comic_id = args['comic_id'];
 
-    comic18Storage = LocalStorage<ComicChapterListItem>(
-      getStoreKey: (val) => 'comic18Chapter${args['comic_id']}',
-    );
+
 
     webViewController = WebViewController();
     menuAnimationController = AnimationController(
@@ -352,8 +349,7 @@ class ComicReaderPageController extends GetxController
 
     // 使用 microtask 延迟更新数据，确保页面完全关闭后再触发 UI 更新
     Future.microtask(() async {
-      await comic18Storage.saveToStore(comicChapters[index]);
-      controller.btnObj.value = comicChapters[index];
+      controller.setStorage(comicChapters[index]);
     });
     prevListImg = [];
     menuAnimationController.dispose(); // 释放动画控制器
