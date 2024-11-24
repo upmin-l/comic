@@ -25,7 +25,7 @@ class Comic18ItemPageController extends GetxController
   late final WebViewController webViewController;
   late String comicInfoState = '未知';
   var btnObj =
-      Rx<ComicChapterListItem>(ComicChapterListItem(text: '开始阅读', href: ''));
+      Rx<ComicChapterListItem>(ComicChapterListItem.fromJson({}));
 
   /// 全部章节
   List<ComicChapterListItem> comic18Chapters = [];
@@ -57,7 +57,7 @@ class Comic18ItemPageController extends GetxController
   void onInit() {
     super.onInit();
     comicInfoState = comic18Item.serialize;
-    logOn = UserData.getInstance.userData?.token != null;
+    logOn = UserData.getInstance.userData?.t != null;
     getChapter().then((value){
       getComicStorage();
     });
@@ -139,10 +139,24 @@ class Comic18ItemPageController extends GetxController
     );
   }
 
+  startComicReader(){
+    Get.toNamed(
+      RouteNames.comicReaderPage,
+      arguments: {
+        'comicChapters': comic18Chapters,
+        'index':btnObj.value.index,
+        'type': true,
+        'comicInfoState': comicInfoState,
+        'comic_id': comic18Item.id,
+      },
+    );
+  }
+
+
   /// 获取单个漫画阅读历史
   Future getComicStorage() async {
     /// 先看是否登录
-    if(UserData.getInstance.userData?.token != null){
+    if(UserData.getInstance.userData?.t != null){
       appGlobalServices.getComicStorage(comic18Item.id).then((value) {
         if(value.href!=''){
           btnObj.value = value;
@@ -151,31 +165,50 @@ class Comic18ItemPageController extends GetxController
           btnObj.value = ComicChapterListItem(
             text: btnObj.value.text, // 保持原来的 text
             href: comic18Chapters[0].href, // 更新为新的 href
+            comic_id: comic18Item.id,
+            index: 0
           );
           isFavorite.value = false;
         }
+        initData();
       });
-      print('isFavorite.value${isFavorite.value}');
+
     }else{
 
     }
   }
 
   /// 接受阅读页面保存历史的回调函数
-  setStorage(ComicChapterListItem res){
+  Future setStorage(ComicChapterListItem res)async{
     btnObj.value = res;
+    /// 如果登录，就发送保存到后台
+    if(logOn){
+      await initSetComicStorage();
+      appGlobalServices.setComicStorage(comicStorageModel);
+    }
+  }
+
+  Future initSetComicStorage() async{
+    comicStorageModel.name = comic18Item.name;
+    comicStorageModel.topic_img = comic18Item.pic;
+    comicStorageModel.comic_id = comic18Item.id;
+    comicStorageModel.chapter_name = btnObj.value.text;
+    comicStorageModel.chapter_url = btnObj.value.href;
+    comicStorageModel.index = btnObj.value.index;
   }
 
   /// 漫画收藏
   Future setComicStorage(BuildContext context)async{
     if(logOn){
-      comicStorageModel.name = comic18Item.name;
-      comicStorageModel.topic_img = comic18Item.pic;
-      comicStorageModel.comic_id = comic18Item.id;
-      comicStorageModel.chapter_name = btnObj.value.text;
-      comicStorageModel.chapter_url = btnObj.value.href;
+      if(isFavorite.value){
+        BrnToast.show("您已经收藏了此漫画！", context);
+        return;
+      }
+      await initSetComicStorage();
       appGlobalServices.setComicStorage(comicStorageModel).then((value){
         BrnToast.show(value.msg, context);
+        isFavorite.value = true;
+        initData();
       });
     }else{
       BrnToast.show("请先登录再进行收藏该漫画！", context);

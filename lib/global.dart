@@ -53,7 +53,7 @@ class UserData {
     writeUserToStore(user);
   }
 
-  void init() async {
+  Future init() async {
     final res = await readUserFromStore();
     if (res != null) {
       _userdata = res;

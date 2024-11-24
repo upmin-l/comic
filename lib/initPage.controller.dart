@@ -59,9 +59,9 @@ class InitPageController extends GetxController {
   void onInit() {
     super.onInit();
 
-    init().then((r) {
+    init().then((r) async{
       /// 读取本地用户数据
-      UserData.getInstance.init();
+      await UserData.getInstance.init();
 
       // UserData.getInstance.clear();
       // prefs.remove('installTime');
@@ -70,16 +70,20 @@ class InitPageController extends GetxController {
         if (token != '') {
           ///设置取消校验是否第一次使用
           isFirstTime = true;
+
           TokenModel tokenModel = TokenModel(
             user: UserData.getInstance.userData?.user ?? '',
             id: UserData.getInstance.userData?.id ?? '',
-            t: UserData.getInstance.userData?.token ?? '',
+            t: UserData.getInstance.userData?.t ?? '',
           );
           ///更新token
           appGlobalServices.getValidateToken(tokenModel).then((value){
-            if(value.code == 200){
-              UserData.getInstance.setUserData = value.data;
-            }
+              UserData.getInstance.setUserData = value;
+              appGlobalServices.httpClient.addRequestModifier<dynamic>((request) {
+                request.headers['Authorization'] =
+                'Bearer ${UserData.getInstance.userData?.t}';
+                return request;
+              });
           });
         } else {
           ///校验是否是第一次使用
@@ -90,8 +94,8 @@ class InitPageController extends GetxController {
   }
 
   Future getToken() async {
-    var a = await UserData.getInstance.readUserFromStore();
-    if (a != null) return a.token;
+    var a =  UserData.getInstance.userData;
+    if (a != null) return a.t;
     return '';
   }
 }

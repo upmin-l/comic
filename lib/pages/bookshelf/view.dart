@@ -85,7 +85,7 @@ class BookshelfPage extends GetView<BookshelfPageController>{
                   ],
                 )),
             body: Align(
-              child: Text(controller.userData.token),
+              child: Text(controller.userData.t),
             ),
           );
         }

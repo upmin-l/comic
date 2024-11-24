@@ -182,20 +182,23 @@ class ComicChapterList {
 
 class ComicChapterListItem {
   final String text;
-  final dynamic href;
-  final String? comic_id;
+  final String href;
+  final String comic_id;
+  late int index;
 
   ComicChapterListItem({
     required this.text,
     required this.href,
-    this.comic_id,
+    required this.comic_id,
+    required this.index,
   });
 
   factory ComicChapterListItem.fromJson(dynamic item) {
     return ComicChapterListItem(
-      text: item['text'] ?? '',
+      text: item['text'] ?? '开始阅读',
       href: item['href'] ?? '',
       comic_id: item['comic_id'] ?? '',
+      index: item['index'] ?? 0,
     );
   }
 }
@@ -243,33 +246,29 @@ class ComicReaders {
 
 class UserModel {
   final String user;
-  final String token;
+  final String t;
   final String authPhoto;
   final String id;
-  final String type;
 
   UserModel({
     required this.user,
-    required this.token,
+    required this.t,
     required this.authPhoto,
     required this.id,
-    required this.type,
   });
 
   UserModel.fromJson(Map<String, dynamic> item)
       : user = item['user'] ?? '未登录',
-        token = item['token'] ?? '',
-        type = item['type'] ?? '',
+        t = item['t'] ?? '',
         id = item['id'] ?? '',
         authPhoto = item['authPhoto'] ?? '';
 
   Map<String, dynamic> toJson() {
     return {
       'user': user,
-      'token': token,
+      't': t,
       'authPhoto': authPhoto,
       'id': id,
-      "type": type,
     };
   }
 }
@@ -328,6 +327,7 @@ class SetComicStorageModel {
   late String region;
   late String chapter_name;
   late String chapter_url;
+  late int index;
 
   SetComicStorageModel({
     required this.name,
@@ -337,6 +337,7 @@ class SetComicStorageModel {
     required this.region,
     required this.chapter_name,
     required this.chapter_url,
+    required this.index,
   });
 
   factory SetComicStorageModel.fromJson(dynamic item) {
@@ -348,6 +349,7 @@ class SetComicStorageModel {
       region: item['region'] ?? '',
       chapter_name: item['chapter_name'] ?? '',
       chapter_url: item['chapter_url'] ?? '',
+      index: item['index'] ?? 0,
     );
   }
   // 将参数转换为 Map
@@ -360,15 +362,10 @@ class SetComicStorageModel {
       'region': region.toString(),
       'chapter_name': chapter_name,
       'chapter_url': chapter_url,
+      'index':index,
     };
   }
 }
-
-// export class tokenDto {
-//   user: string
-//   id: string
-//   t: string
-// }
 
 class TokenModel {
   late String user;
@@ -381,12 +378,19 @@ class TokenModel {
     required this.t,
   });
 
+  factory TokenModel.fromJson(dynamic item) {
+    return TokenModel(
+      user: item['user'] ?? '',
+      id: item['id'] ?? '',
+      t: item['t'] ?? '',
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'user': user,
-      'token': t,
+      't': t,
       'id': id,
     };
   }
 }
-

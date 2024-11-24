@@ -9,10 +9,10 @@ class AppGlobalServices extends GetConnect {
   void onInit() {
     super.onInit();
     httpClient.baseUrl = globalBaseUrl;
-    if (UserData.getInstance.userData?.token != null) {
+    if (UserData.getInstance.userData?.t != null) {
       httpClient.addRequestModifier<dynamic>((request) {
         request.headers['Authorization'] =
-            'Bearer ${UserData.getInstance.userData?.token}';
+            'Bearer ${UserData.getInstance.userData?.t}';
         return request;
       });
     }
@@ -20,7 +20,6 @@ class AppGlobalServices extends GetConnect {
 
   Future<CustomerModel> getCustomer(String type) async {
     String url = '/irregular/getCustomer';
-
     final res = await get(url, query: {"type": type});
     if (res.hasError) return Future.error(Exception(res.statusCode));
 
@@ -43,17 +42,20 @@ class AppGlobalServices extends GetConnect {
     final queryParams = {
       ...comicStorageModel.toMap(), // 通过扩展运算符将 GetComicParameter 转换为 Map
     };
+    print(queryParams);
     final res = await post(url, queryParams);
     if (res.hasError) return Future.error(Exception(res.statusCode));
     return ComicResponse.fromJson(res.body);
   }
 
   ///校验token是否过期
-  Future getValidateToken(TokenModel tokenModel) async {
+  Future<UserModel> getValidateToken(TokenModel tokenModel) async {
     String url = '/user/validatetoken';
-
-    final res = await post(url, tokenModel.toMap());
+    final queryParams = {
+      ...tokenModel.toMap(), // 通过扩展运算符将 GetComicParameter 转换为 Map
+    };
+    final res = await post(url, queryParams);
     if (res.hasError) return Future.error(Exception(res.statusCode));
-    return res.body['data'];
+    return  UserModel.fromJson(res.body['data']);
   }
 }

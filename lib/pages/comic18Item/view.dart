@@ -197,7 +197,7 @@ class Comic18ItemPage extends GetView<Comic18ItemPageController> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  print(controller.btnObj.value.href);
+                                  controller.startComicReader();
                                 },
                                 child: Container(
                                   alignment: Alignment.center,

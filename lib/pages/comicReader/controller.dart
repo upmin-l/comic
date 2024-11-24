@@ -349,6 +349,7 @@ class ComicReaderPageController extends GetxController
 
     // 使用 microtask 延迟更新数据，确保页面完全关闭后再触发 UI 更新
     Future.microtask(() async {
+      comicChapters[index].index = index;
       controller.setStorage(comicChapters[index]);
     });
     prevListImg = [];

@@ -24,7 +24,6 @@ class LoginServices extends GetConnect {
 
     if (res.hasError) return Future.error(Exception(res.statusCode));
     return ResponseModel.fromJson(res.body);
-    // return ResponseModel.fromJson(res.body);
   }
 
   Future<String> getUser(String user) async {

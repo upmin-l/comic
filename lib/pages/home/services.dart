@@ -14,7 +14,7 @@ class Comic18Services extends GetConnect {
     httpClient.baseUrl = globalBaseUrl;
     httpClient.addRequestModifier<dynamic>((request) {
       request.headers['Authorization'] =
-      'Bearer ${UserData.getInstance.userData?.token}';
+      'Bearer ${UserData.getInstance.userData?.t}';
       return request;
     });
   }
