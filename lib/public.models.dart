@@ -299,6 +299,8 @@ class CustomerModel {
   final String qq;
   final String show_url;
   final String tap_url;
+  final CustomerModelData data;
+  final String description;
 
   CustomerModel({
     required this.type,
@@ -306,6 +308,8 @@ class CustomerModel {
     required this.show_url,
     required this.qq,
     required this.tap_url,
+    required this.data,
+    required this.description,
   });
 
   factory CustomerModel.fromJson(dynamic item) {
@@ -315,6 +319,28 @@ class CustomerModel {
       show_url: item['show_url'] ?? '',
       qq: item['qq'] ?? '',
       tap_url: item['tap_url'] ?? '',
+      description: item['description'] ?? '',
+      data: CustomerModelData.fromJson(item['data'] ?? {}),
+    );
+  }
+}
+
+class CustomerModelData {
+  final int size;
+  final String version;
+  final String md5;
+
+  CustomerModelData({
+    required this.version,
+    required this.size,
+    required this.md5,
+  });
+
+  factory CustomerModelData.fromJson(dynamic item) {
+    return CustomerModelData(
+      size: item['size'] ?? 0,
+      version: item['version'] ?? '',
+      md5: item['md5'] ?? '',
     );
   }
 }
@@ -362,7 +388,7 @@ class SetComicStorageModel {
       'region': region.toString(),
       'chapter_name': chapter_name,
       'chapter_url': chapter_url,
-      'index':index,
+      'index': index,
     };
   }
 }

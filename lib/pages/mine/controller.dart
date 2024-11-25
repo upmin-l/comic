@@ -32,14 +32,14 @@ class MinePageController extends GetxController {
   bool isLogin = false;
 
   Future getCustomer() async {
-    appGlobalServices.getCustomer('support').then((value) {
+    appGlobalServices.getCustomer('support',initPageController.version).then((value) {
       customer = value;
       initData();
     });
   }
 
   Future getBanner() async {
-    appGlobalServices.getCustomer('banner').then((value) {
+    appGlobalServices.getCustomer('banner',initPageController.version).then((value) {
       bannerRes = value;
       initData();
     });

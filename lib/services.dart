@@ -18,9 +18,9 @@ class AppGlobalServices extends GetConnect {
     }
   }
 
-  Future<CustomerModel> getCustomer(String type) async {
+  Future<CustomerModel> getCustomer(String type,String version) async {
     String url = '/irregular/getCustomer';
-    final res = await get(url, query: {"type": type});
+    final res = await post(url,{"type": type,"version":version});
     if (res.hasError) return Future.error(Exception(res.statusCode));
 
     return CustomerModel.fromJson(res.body['data']);
@@ -57,5 +57,13 @@ class AppGlobalServices extends GetConnect {
     final res = await post(url, queryParams);
     if (res.hasError) return Future.error(Exception(res.statusCode));
     return  UserModel.fromJson(res.body['data']);
+  }
+
+  /// 获取app是否需要更新
+  Future getAppVersion(String version)async{
+    String url = '/irregular/getCustomer';
+
+    final res = await post(url,{'type':"app","version":version});
+    if (res.hasError) return Future.error(Exception(res.statusCode));
   }
 }

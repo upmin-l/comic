@@ -1,13 +1,16 @@
+import 'dart:io';
 
 import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:comic/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 
 import 'initPage.controller.dart';
 
-class InitPage extends GetView<InitPageController>{
+class InitPage extends GetView<InitPageController> {
   const InitPage({super.key});
 
   @override
@@ -15,7 +18,7 @@ class InitPage extends GetView<InitPageController>{
     return GetBuilder<InitPageController>(
       init: InitPageController(),
       id: "InitPage",
-      builder: (_){
+      builder: (_) {
         // Color backgroundColor = controller.currentIndex == 0 ? Colors.black:Colors.white;
         // Color colorSelected =  controller.currentIndex == 0 ? Colors.white:const Color(0xff272636);
         return Scaffold(
@@ -41,10 +44,54 @@ class InitPage extends GetView<InitPageController>{
               },
             ),
           ),
-          body: LazyLoadIndexedStack(
-            index: controller.currentIndex,
-            children: controller.pages,
-          ),
+          body: controller.isAppUpdate
+              ? Container(
+                  padding: EdgeInsets.only(top: 50.h),
+                  child: Column(
+                    children: [
+                      const Image(
+                        image: AssetImage('assets/images/log.png'),
+                        fit: BoxFit.cover,
+                      ),
+                      Text(controller.appMsg.description),
+                      SizedBox(height: 30.h),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          OutlinedButton(
+                            onPressed: () {
+                              if(Platform.isAndroid){
+                                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                              }else if (Platform.isIOS){
+                                exit(0);
+                              }
+                            },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppColor.defaultColor,
+                              side: const BorderSide(
+                                  color: AppColor.defaultColor),
+                            ),
+                            child: const Text('取消',
+                                style: TextStyle(color: AppColor.defaultColor)),
+                          ),
+                          ElevatedButton(
+                            onPressed: () =>controller.onOpenUrl(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  AppColor.defaultColor, // 设置背景颜色为蓝色
+                            ),
+                            child: const Text('现在更新'),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                )
+              : LazyLoadIndexedStack(
+                  index: controller.currentIndex,
+                  children: controller.pages,
+                ),
           // body: PageTransitionSwitcher(
           //   child: controller.pages[controller.currentIndex],
           //   transitionBuilder: (child, animation, secondaryAnimation) {

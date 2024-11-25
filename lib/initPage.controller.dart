@@ -4,13 +4,19 @@ import 'package:comic/public.models.dart';
 import 'package:comic/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InitPageController extends GetxController {
   Color bottomNavigationBarColor = Colors.white;
 
   final appGlobalServices = Get.find<AppGlobalServices>();
   int currentIndex = 0;
+  /// app 版本
+  String version ='';
+  bool isAppUpdate = false;
+  late CustomerModel appMsg;
 
   late SharedPreferences prefs;
 
@@ -53,7 +59,27 @@ class InitPageController extends GetxController {
   ///初始化设置
   Future init() async {
     prefs = await SharedPreferences.getInstance();
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    version = packageInfo.version;
+    /// 请求app 是否需要更新
+    appMsg = await appGlobalServices.getCustomer('app',version);
+    if(appMsg.data.version!=version){
+      isAppUpdate = true;
+    }else{
+      isAppUpdate = false;
+    }
+    update(['InitPage']);
   }
+
+  Future<void> onOpenUrl() async {
+    Uri uri = Uri.parse(appMsg.tap_url);
+    if (!await canLaunchUrl(uri)) throw Exception('错误');
+
+    if (!await launchUrl(uri, mode: LaunchMode.platformDefault)) {
+      throw Exception('无法唤起 QQ，请检查 QQ 是否安装');
+    }
+  }
+
 
   @override
   void onInit() {
