@@ -18,9 +18,9 @@ class AppGlobalServices extends GetConnect {
     }
   }
 
-  Future<CustomerModel> getCustomer(String type,String version) async {
+  Future<CustomerModel> getCustomer(String type, String version) async {
     String url = '/irregular/getCustomer';
-    final res = await post(url,{"type": type,"version":version});
+    final res = await post(url, {"type": type, "version": version});
     if (res.hasError) return Future.error(Exception(res.statusCode));
 
     return CustomerModel.fromJson(res.body['data']);
@@ -31,7 +31,15 @@ class AppGlobalServices extends GetConnect {
     String url = '/user/hcomicStorage';
     final res = await get(url, query: {'id': id});
     if (res.hasError) return Future.error(Exception(res.statusCode));
-    return ComicChapterListItem.fromJson(res.body['data']);
+    return ComicChapterListItem.fromJson(res.body['data'][0]);
+  }
+
+  /// 获取用户所有漫画收藏
+  Future<List<ComicChapterListItem>> getBookshelfList()async{
+    String url = '/user/hcomicStorage';
+    final res = await get(url);
+    if (res.hasError) return Future.error(Exception(res.statusCode));
+    return ComicChapterList.toJson(res.body['data']).list;
   }
 
   /// 保存用户收藏漫画
@@ -56,14 +64,14 @@ class AppGlobalServices extends GetConnect {
     };
     final res = await post(url, queryParams);
     if (res.hasError) return Future.error(Exception(res.statusCode));
-    return  UserModel.fromJson(res.body['data']);
+    return UserModel.fromJson(res.body['data']);
   }
 
   /// 获取app是否需要更新
-  Future getAppVersion(String version)async{
+  Future getAppVersion(String version) async {
     String url = '/irregular/getCustomer';
 
-    final res = await post(url,{'type':"app","version":version});
+    final res = await post(url, {'type': "app", "version": version});
     if (res.hasError) return Future.error(Exception(res.statusCode));
   }
 }

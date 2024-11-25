@@ -1,4 +1,3 @@
-import 'package:comic/public.models.dart';
 
 /// 主页  最近更新 模型
 class RecentUpdateItem {
@@ -34,6 +33,7 @@ class Comic18List {
   factory Comic18List.toJson(List<dynamic> list) {
     return Comic18List(list.map((item) => Comic18Item.fromJson(item)).toList());
   }
+
 }
 
 class Comic18Item  {

@@ -1,3 +1,4 @@
+import 'package:bruno/bruno.dart';
 import 'package:comic/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,14 +42,23 @@ class MinePage extends GetView<MinePageController> {
                       icon: const Icon(Icons.notifications_none),
                       iconSize: 24,
                       color: AppColor.defaultColor,
-                      onPressed: () {},
+                      onPressed: () {
+                        BrnToast.show("暂无消息！", context);
+                      },
                     ),
                   ],
                 ),
                 // 用户信息
                 SliverToBoxAdapter(
-                    child: userInfo(
-                        context, controller.userData, controller.isLogin)),
+                  child: userInfo(
+                    context,
+                    controller.userData,
+                    controller.isLogin,
+                    () {
+                      controller.refreshUser();
+                    },
+                  ),
+                ),
                 SliverToBoxAdapter(
                   child: controller.bannerRes.show_url != ''
                       ? Container(

@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:bruno/bruno.dart';
 import 'package:comic/global.dart';
 import 'package:comic/initPage.controller.dart';
 import 'package:comic/pages/bookshelf/index.dart';
+import 'package:comic/pages/index.dart';
 import 'package:comic/public.models.dart';
 import 'package:comic/services.dart';
 import 'package:comic/utils/dialog.dart';
@@ -25,6 +28,8 @@ class MinePageController extends GetxController {
   //客服qq
   CustomerModel customer = CustomerModel.fromJson({});
 
+  LoginServices loginServices = Get.put(LoginServices());
+
   // banner 图， 埋点，后期有广告可以打进来
   CustomerModel bannerRes = CustomerModel.fromJson({});
 
@@ -32,14 +37,18 @@ class MinePageController extends GetxController {
   bool isLogin = false;
 
   Future getCustomer() async {
-    appGlobalServices.getCustomer('support',initPageController.version).then((value) {
+    appGlobalServices
+        .getCustomer('support', initPageController.version)
+        .then((value) {
       customer = value;
       initData();
     });
   }
 
   Future getBanner() async {
-    appGlobalServices.getCustomer('banner',initPageController.version).then((value) {
+    appGlobalServices
+        .getCustomer('banner', initPageController.version)
+        .then((value) {
       bannerRes = value;
       initData();
     });
@@ -76,6 +85,21 @@ class MinePageController extends GetxController {
     update(["minePage"]);
   }
 
+  Future refreshUser() async {
+    TokenModel tokenModel = TokenModel(
+      user: userData.user ,
+      id: userData.id ,
+      t: userData.t ,
+    );
+    userData = UserModel.fromJson({});
+    UserData.getInstance.clear();
+
+    appGlobalServices.getValidateToken(tokenModel).then((value) {
+      UserData.getInstance.setUserData = value;
+      initData();
+    });
+  }
+
   Future logout(context) async {
     BrunoDialog.showConfirmDialog(
       context,
@@ -92,6 +116,7 @@ class MinePageController extends GetxController {
         isLogin = false;
         BrnToast.show("退出成功！", context);
         bookshelfPageController.updateUserData();
+
         ///当退出登录后进行锁定，不能跳到阅读页面
         initPageController.isFirstTime = false;
         Navigator.pop(context);

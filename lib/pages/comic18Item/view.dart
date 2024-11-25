@@ -1,4 +1,5 @@
 import 'package:comic/app_theme.dart';
+import 'package:comic/global.dart';
 import 'package:comic/routers/index.dart';
 import 'package:comic/utils/index.dart';
 import 'package:comic/widgets/index.dart';
@@ -106,7 +107,7 @@ class Comic18ItemPage extends GetView<Comic18ItemPageController> {
                           onTap: (idx) {
                             // print(controller.chapterTab18Controller?.index);
                             // print((controller.chapterTab18Controller!.index)*20+idx);
-                            if (controller.initPageController.isFirstTime) {
+                            if (controller.logOn) {
                               controller.goToComicReaderPage(idx);
                             } else {
                               BrunoDialog.showConfirmDialog(
@@ -197,7 +198,21 @@ class Comic18ItemPage extends GetView<Comic18ItemPageController> {
                             ),
                             InkWell(
                               onTap: () {
-                                controller.startComicReader();
+                                if(UserData.getInstance.userData?.type =='no'){
+                                  BrunoDialog.showConfirmDialog(
+                                    context,
+                                    title: '提示',
+                                    msg: '您的账号还没激活，无法继续观看',
+                                    confirm: '去激活',
+                                    tip: '温馨提示：登录后可以存储喜欢、阅读记录等功能',
+                                    onCancel: () => Navigator.pop(context),
+                                    onConfirm: () {
+                                      Navigator.pop(context);
+                                    },
+                                  );
+                                }else{
+                                  controller.startComicReader();
+                                }
                               },
                               child: Container(
                                 alignment: Alignment.center,

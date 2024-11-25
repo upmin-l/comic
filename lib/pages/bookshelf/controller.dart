@@ -1,6 +1,7 @@
 
 import 'package:comic/global.dart';
 import 'package:comic/public.models.dart';
+import 'package:comic/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,9 +10,15 @@ class BookshelfPageController extends GetxController{
   final FocusNode bookFocusNode = FocusNode();
   final bookTextEditingController = TextEditingController();
 
+  final appGlobalServices = Get.find<AppGlobalServices>();
+
   late UserModel userData =
       UserData.getInstance.userData ?? UserModel.fromJson({});
 
+  late List<ComicChapterListItem> bookshelfList =  ComicChapterList.toJson([]).list;
+
+  /// 暂时提示语
+  String msg = '暂时未开放！敬请等待';
 
   initData() {
     update(["bookshelfPage"]);
@@ -32,6 +39,19 @@ class BookshelfPageController extends GetxController{
         initData();
       }
     });
+    getBookshelfList();
+  }
 
+  Future getBookshelfList()async{
+    if(userData.t!=''){
+      bookshelfList = await appGlobalServices.getBookshelfList();
+      print(bookshelfList.length);
+      for (int i = 0; i < bookshelfList.length; i++) {
+        // Comic18List.
+        // comicListMode.list[i].topic_img =
+        // 'https://static-tw.baozimh.com/cover/${comicListMode.list[i].topic_img}';
+      }
+      initData();
+    }
   }
 }

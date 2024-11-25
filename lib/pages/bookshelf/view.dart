@@ -1,21 +1,22 @@
 import 'package:bruno/bruno.dart';
 import 'package:comic/app_theme.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'index.dart';
 
-class BookshelfPage extends GetView<BookshelfPageController>{
+class BookshelfPage extends GetView<BookshelfPageController> {
   const BookshelfPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
-      init: BookshelfPageController(),
-      id: 'bookshelfPage',
-        builder:(_){
-          return  Scaffold(
+        init: BookshelfPageController(),
+        id: 'bookshelfPage',
+        builder: (_) {
+          return Scaffold(
             appBar: AppBar(
                 elevation: 0,
                 titleSpacing: 0,
@@ -25,7 +26,7 @@ class BookshelfPage extends GetView<BookshelfPageController>{
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                     SizedBox(width: 18.sp),
+                    SizedBox(width: 18.sp),
                     Expanded(
                       flex: 1,
                       child: Container(
@@ -84,11 +85,40 @@ class BookshelfPage extends GetView<BookshelfPageController>{
                     )
                   ],
                 )),
-            body: Align(
-              child: Text(controller.userData.t),
-            ),
+            body: Align(child: Text(controller.msg)),
+            // body: controller.userData.t != ''
+            //     ? Padding(
+            //         padding:
+            //             EdgeInsets.symmetric(vertical: 3.w, horizontal: 5.h),
+            //         child: CustomScrollView(
+            //           slivers: [
+            //             SliverGrid(
+            //               gridDelegate:
+            //                   const SliverGridDelegateWithFixedCrossAxisCount(
+            //                 crossAxisCount: 3,
+            //                 childAspectRatio: 0.6,
+            //                 crossAxisSpacing: 5,
+            //                 mainAxisSpacing: 3.0,
+            //               ),
+            //               delegate: SliverChildBuilderDelegate(
+            //                 childCount: controller.bookshelfList.length,
+            //                 (context, index) {
+            //                   // return Text(controller.bookshelfList[index].);
+            //                   // return GridViewList<ComicChapterListItem>(
+            //                   //   pathUrl: RouteNames.comicItem18Page,
+            //                   //   item: controller.bookshelfList[index],
+            //                   //   getName: (item) => item.name,
+            //                   //   getTopicImg: (item) => item.pic,
+            //                   //   getTypeNames: (item) => [],
+            //                   // );
+            //                 },
+            //               ),
+            //             )
+            //           ],
+            //         ),
+            //       )
+            //     : Align(child: Text(controller.msg)),
           );
-        }
-    );
+        });
   }
 }

@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-Widget userInfo(context,UserModel data,bool isLogin) {
+Widget userInfo(context,UserModel data,bool isLogin,Function onTap) {
+  print(data.type);
   return Container(
     decoration: const BoxDecoration(
       gradient: LinearGradient(
@@ -61,6 +62,7 @@ Widget userInfo(context,UserModel data,bool isLogin) {
                   Text(data.user, style: TextStyle(fontSize: 14.sp)),
                   const SizedBox(height: 4.0),
                   /// 账号未激活显示
+                  if(data.t!=''&&data.type=='no')
                   Padding(
                     padding: EdgeInsets.only(left: 8.sp),
                     child: Row(
@@ -84,7 +86,15 @@ Widget userInfo(context,UserModel data,bool isLogin) {
                           ),
                           child: const Text('点击激活'),
 
-                        )
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.loop),
+                          iconSize: 24,
+                          color: AppColor.defaultColor,
+                          onPressed: () {
+                            onTap();
+                          },
+                        ),
                       ],
                     ),
                   )

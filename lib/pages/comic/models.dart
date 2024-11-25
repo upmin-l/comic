@@ -1,4 +1,3 @@
-import 'package:comic/public.models.dart';
 
 class ComicList {
   List<ComicItem> list;
@@ -11,7 +10,6 @@ class ComicList {
 }
 
 class ComicItem{
-  @override
   final String name;
   final String comic_id;
   final List<dynamic> type_names;

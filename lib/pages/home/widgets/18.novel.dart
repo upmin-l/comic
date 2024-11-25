@@ -11,6 +11,8 @@ class Novel18Page extends StatefulWidget {
 class _Comic18State extends State<Novel18Page> {
   @override
   Widget build(BuildContext context) {
-    return Text('123');
+    return const Scaffold(
+      body: Align(child: Text('暂时未开放！敬请等待')),
+    );
   }
 }

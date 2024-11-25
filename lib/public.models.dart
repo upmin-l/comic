@@ -184,6 +184,8 @@ class ComicChapterListItem {
   final String text;
   final String href;
   final String comic_id;
+  final String name;
+  final String topic_img;
   late int index;
 
   ComicChapterListItem({
@@ -191,12 +193,16 @@ class ComicChapterListItem {
     required this.href,
     required this.comic_id,
     required this.index,
+    required this.name,
+    required this.topic_img,
   });
 
   factory ComicChapterListItem.fromJson(dynamic item) {
     return ComicChapterListItem(
       text: item['text'] ?? '开始阅读',
       href: item['href'] ?? '',
+      name: item['name'] ?? '',
+      topic_img: item['topic_img'] ?? '',
       comic_id: item['comic_id'] ?? '',
       index: item['index'] ?? 0,
     );
@@ -249,18 +255,21 @@ class UserModel {
   final String t;
   final String authPhoto;
   final String id;
+  final String type;
 
   UserModel({
     required this.user,
     required this.t,
     required this.authPhoto,
     required this.id,
+    required this.type,
   });
 
   UserModel.fromJson(Map<String, dynamic> item)
       : user = item['user'] ?? '未登录',
         t = item['t'] ?? '',
         id = item['id'] ?? '',
+        type = item['type'] ?? 'no',
         authPhoto = item['authPhoto'] ?? '';
 
   Map<String, dynamic> toJson() {
@@ -268,6 +277,7 @@ class UserModel {
       'user': user,
       't': t,
       'authPhoto': authPhoto,
+      'type': type,
       'id': id,
     };
   }
