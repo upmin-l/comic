@@ -18,7 +18,7 @@ class MinePageController extends GetxController {
   final initPageController = Get.find<InitPageController>();
   final bookshelfPageController = Get.find<BookshelfPageController>();
   late List<MineList> mineList = [
-    MineList(name: '设置', icon: Icons.settings_suggest, key: 0),
+    // MineList(name: '设置', icon: Icons.settings_suggest, key: 0),
     MineList(name: '账号信息', icon: Icons.manage_accounts, key: 1),
   ];
 
