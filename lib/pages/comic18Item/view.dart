@@ -105,10 +105,22 @@ class Comic18ItemPage extends GetView<Comic18ItemPageController> {
                         child: ComicItemChapterBox(
                           tabContents: controller.tab18Contents,
                           onTap: (idx) {
-                            // print(controller.chapterTab18Controller?.index);
-                            // print((controller.chapterTab18Controller!.index)*20+idx);
                             if (controller.logOn) {
-                              controller.goToComicReaderPage(idx);
+                              if(UserData.getInstance.userData?.type=='no'){
+                                BrunoDialog.showConfirmDialog(
+                                  context,
+                                  title: '提示',
+                                  msg: '为了防止爬虫机器号，请确认您是真人，请手动激活您的账号',
+                                  confirm: '去激活',
+                                  tip: '温馨提示：一次激活永久使用',
+                                  onCancel: () => Navigator.pop(context),
+                                  onConfirm: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              }else{
+                                controller.goToComicReaderPage(idx);
+                              }
                             } else {
                               BrunoDialog.showConfirmDialog(
                                 context,
@@ -202,9 +214,9 @@ class Comic18ItemPage extends GetView<Comic18ItemPageController> {
                                   BrunoDialog.showConfirmDialog(
                                     context,
                                     title: '提示',
-                                    msg: '您的账号还没激活，无法继续观看',
+                                    msg: '为了防止爬虫机器号，请确认您是真人，请手动激活您的账号',
                                     confirm: '去激活',
-                                    tip: '温馨提示：登录后可以存储喜欢、阅读记录等功能',
+                                    tip: '温馨提示：一次激活永久使用',
                                     onCancel: () => Navigator.pop(context),
                                     onConfirm: () {
                                       Navigator.pop(context);

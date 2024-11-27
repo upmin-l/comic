@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-Widget userInfo(context,UserModel data,bool isLogin,Function onTap) {
-  print(data.type);
+Widget userInfo(context,UserModel data,bool isLogin,Function onTap){
   return Container(
     decoration: const BoxDecoration(
       gradient: LinearGradient(

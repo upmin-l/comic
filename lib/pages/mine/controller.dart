@@ -95,7 +95,9 @@ class MinePageController extends GetxController {
     UserData.getInstance.clear();
 
     appGlobalServices.getValidateToken(tokenModel).then((value) {
+      print('getValidateToken${value.type}');
       UserData.getInstance.setUserData = value;
+      userData = UserData.getInstance.userData!;
       initData();
     });
   }
