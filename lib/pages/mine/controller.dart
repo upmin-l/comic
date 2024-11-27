@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bruno/bruno.dart';
 import 'package:comic/global.dart';
 import 'package:comic/initPage.controller.dart';
-import 'package:comic/pages/bookshelf/index.dart';
 import 'package:comic/pages/index.dart';
 import 'package:comic/public.models.dart';
 import 'package:comic/services.dart';

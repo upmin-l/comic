@@ -178,8 +178,8 @@ class Comic18ItemPageController extends GetxController
   Future setStorage(ComicChapterListItem res) async {
     btnObj.value = res;
 
-    /// 如果登录，就发送保存到后台
-    if (logOn) {
+    /// 如果登录了并且用户手动收藏的漫画，就发送保存到后台
+    if (logOn && isFavorite.value) {
       await initSetComicStorage();
       appGlobalServices.setComicStorage(comicStorageModel);
     }

@@ -106,6 +106,7 @@ class Comic18ItemPage extends GetView<Comic18ItemPageController> {
                           tabContents: controller.tab18Contents,
                           onTap: (idx) {
                             if (controller.logOn) {
+
                               if(UserData.getInstance.userData?.type=='no'){
                                 BrunoDialog.showConfirmDialog(
                                   context,
@@ -130,7 +131,7 @@ class Comic18ItemPage extends GetView<Comic18ItemPageController> {
                                 tip: '温馨提示：登录后可以存储喜欢、阅读记录等功能',
                                 onCancel: () => Navigator.pop(context),
                                 onConfirm: () {
-                                  Navigator.pop(context);
+                                  Get.offNamed(RouteNames.loginPage);
                                 },
                               );
                             }
@@ -210,20 +211,35 @@ class Comic18ItemPage extends GetView<Comic18ItemPageController> {
                             ),
                             InkWell(
                               onTap: () {
-                                if(UserData.getInstance.userData?.type =='no'){
+                                if(controller.logOn){
+                                  print(UserData.getInstance.userData?.type =='no');
+                                  if(UserData.getInstance.userData?.type =='no'){
+                                    BrunoDialog.showConfirmDialog(
+                                      context,
+                                      title: '提示',
+                                      msg: '为了防止爬虫机器号，请确认您是真人，请手动激活您的账号',
+                                      confirm: '去激活',
+                                      tip: '温馨提示：一次激活永久使用',
+                                      onCancel: () => Navigator.pop(context),
+                                      onConfirm: () {
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  }else{
+                                    // controller.startComicReader();
+                                  }
+                                }else{
                                   BrunoDialog.showConfirmDialog(
                                     context,
                                     title: '提示',
-                                    msg: '为了防止爬虫机器号，请确认您是真人，请手动激活您的账号',
-                                    confirm: '去激活',
-                                    tip: '温馨提示：一次激活永久使用',
+                                    msg: '为了您更好的体验，请进行登录再使用！',
+                                    confirm: '去登录',
+                                    tip: '温馨提示：登录后可以存储喜欢、阅读记录等功能',
                                     onCancel: () => Navigator.pop(context),
                                     onConfirm: () {
-                                      Navigator.pop(context);
+                                      Get.offNamed(RouteNames.loginPage);
                                     },
                                   );
-                                }else{
-                                  controller.startComicReader();
                                 }
                               },
                               child: Container(
