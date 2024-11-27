@@ -1,24 +1,35 @@
-name: Build Flutter APK
+name: Build APK
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
+    name: Build APK
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
+    # 检查代码
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # 设置 Flutter 环境
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.3.2'  # 根据你的 pubspec.yaml 文件设置 Flutter 版本
-    - name: Install dependencies
+        flutter-version: '3.3.2' # 与 pubspec.yaml 中的 Flutter SDK 版本匹配
+
+    # 安装依赖
+    - name: Install Dependencies
       run: flutter pub get
+
+    # 构建 APK
     - name: Build APK
-      run: flutter build apk
+      run: flutter build apk --release
+
+    # 保存打包的 APK 文件到工作区
     - name: Upload APK
       uses: actions/upload-artifact@v3
       with:
         name: app-release.apk
-        tag: v1.0
         path: build/app/outputs/flutter-apk/app-release.apk
