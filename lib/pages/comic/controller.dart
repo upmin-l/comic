@@ -62,32 +62,32 @@ class ComicPageController extends GetxController
 
   // 创建ListMode实例作为分类列表数据
   List<ListMode> classifyList = [
-    ListMode(name: '全部', region: 'Genre'),
-    ListMode(name: '恋爱', region: 'Genre'),
-    ListMode(name: '纯爱', region: 'Genre'),
-    ListMode(name: '古风', region: 'Genre'),
-    ListMode(name: '异能', region: 'Genre'),
-    ListMode(name: '悬疑', region: 'Genre'),
-    ListMode(name: '剧情', region: 'Genre'),
-    ListMode(name: '科幻', region: 'Genre'),
-    ListMode(name: '奇幻', region: 'Genre'),
-    ListMode(name: '玄幻', region: 'Genre'),
-    ListMode(name: '穿越', region: 'Genre'),
-    ListMode(name: '冒险', region: 'Genre'),
-    ListMode(name: '推理', region: 'Genre'),
-    ListMode(name: '武侠', region: 'Genre'),
-    ListMode(name: '格斗', region: 'Genre'),
-    ListMode(name: '战争', region: 'Genre'),
-    ListMode(name: '热血', region: 'Genre'),
-    ListMode(name: '搞笑', region: 'Genre'),
-    ListMode(name: '大女主', region: 'Genre'),
-    ListMode(name: '都市', region: 'Genre'),
-    ListMode(name: '总裁', region: 'Genre'),
-    ListMode(name: '后宫', region: 'Genre'),
-    ListMode(name: '日常', region: 'Genre'),
-    ListMode(name: '韩漫', region: 'Genre'),
-    ListMode(name: '少年', region: 'Genre'),
-    ListMode(name: '其他', region: 'Genre'),
+    ListMode(name: '全部', region: 'all'),
+    ListMode(name: '恋爱', region: 'lianai'),
+    ListMode(name: '纯爱', region: 'chunai'),
+    ListMode(name: '古风', region: 'gufeng'),
+    ListMode(name: '异能', region: 'yineng'),
+    ListMode(name: '悬疑', region: 'xuanyi'),
+    ListMode(name: '剧情', region: 'juqing'),
+    ListMode(name: '科幻', region: 'kehuan'),
+    ListMode(name: '奇幻', region: 'qihuan'),
+    ListMode(name: '玄幻', region: 'xuanhuan'),
+    ListMode(name: '穿越', region: 'chuanyue'),
+    ListMode(name: '冒险', region: 'mouxian'),
+    ListMode(name: '推理', region: 'tuili'),
+    ListMode(name: '武侠', region: 'wuxia'),
+    ListMode(name: '格斗', region: 'gedou'),
+    ListMode(name: '战争', region: 'zhanzheng'),
+    ListMode(name: '热血', region: 'rexie'),
+    ListMode(name: '搞笑', region: 'gaoxiao'),
+    ListMode(name: '大女主', region: 'danuzhu'),
+    ListMode(name: '都市', region: 'dushi'),
+    ListMode(name: '总裁', region: 'zongcai'),
+    ListMode(name: '后宫', region: 'hougong'),
+    ListMode(name: '日常', region: 'richang'),
+    ListMode(name: '韩漫', region: 'hanman'),
+    ListMode(name: '少年', region: 'shaonian'),
+    ListMode(name: '其他', region: 'qita'),
   ];
 
   ComicShowMode comicShowModeList = ComicShowMode(
@@ -109,6 +109,7 @@ class ComicPageController extends GetxController
     '6':'chuanyue', //穿越
   };
 
+  Color currentLabelColor = Colors.grey.shade400; // 默认颜色
 
   initData() {
     update(["comicPage"]);
@@ -118,10 +119,8 @@ class ComicPageController extends GetxController
   void onInit() {
     super.onInit();
     topTabController = TabController(vsync: this, length: 7);
-    topTabController.addListener(()=>{
-
-    });
-
+    topTabController.index = 0;
+    currentLabelColor = AppColor.red2;
     getComicList();
     comicShowModeList = ComicShowMode(
         countryList: countryList,
@@ -146,9 +145,31 @@ class ComicPageController extends GetxController
     getComicList();
   }
 
+  String findKeyByValue(Map<String, String> map, String value) {
+    // 遍历map，如果找到对应的值，返回其key
+    return map.keys.firstWhere((key) => map[key] == value, orElse: () => '');
+  }
+
+  ///更多选择帅选 的回调
+  void handleFilter(String reg,String type){
+    comicPageLoading =true;
+    initData();
+    getComicParameter.type = type;
+    getComicParameter.region = reg;
+
+    String key = findKeyByValue(res, type);
+    if(key!=''){
+      topTabController.index = int.parse(key);
+      currentLabelColor = AppColor.red2;
+    }else{
+      currentLabelColor = Colors.grey.shade400;
+    }
+    getComicList();
+  }
+
 
   Future getComicList() async {
-    // comicList = [];
+    comicList = [];
     comicServices.getComicList(getComicParameter).then((value) {
       ComicList comicListMode = ComicList.toJson(value);
       if(comicListMode.list.isNotEmpty){

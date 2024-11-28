@@ -77,7 +77,7 @@ class ComicPage extends GetView<ComicPageController> {
                             customTab('大女主'),
                             customTab('穿越'),
                           ],
-                          labelColor: AppColor.red,
+                          labelColor: controller.currentLabelColor,
                           controller: controller.topTabController,
                           labelPadding: 5,
                           fontSize: 12.sp,
@@ -98,6 +98,11 @@ class ComicPage extends GetView<ComicPageController> {
                             builder: (BuildContext context) {
                               return ModalList(
                                 comicShowModeList: controller.comicShowModeList,
+                                comicParameter: controller.getComicParameter,
+                                onTap: (region,type){
+                                  controller.handleFilter(region,type);
+                                },
+
                               );
                             },
                           );

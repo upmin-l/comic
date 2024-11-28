@@ -23,6 +23,8 @@ class ComicServices extends GetConnect{
   /// 获取漫画列表
   Future getComicList(GetComicParameter parameter) async {
     String url = 'https://cn.baozimh.com/api/bzmhq/amp_comic_list?type=${parameter.type}&region=${parameter.region}&filter=${parameter.filter}&page=${parameter.page}&limit=${parameter.limit}&language=cn';
+    print(url);
+
     final res = await get(url);
     if (res.hasError) return Future.error(Exception(res.statusCode));
     return res.body['items'];
