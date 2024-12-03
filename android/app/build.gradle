@@ -1,8 +1,10 @@
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
 }
+ext.kotlin_version = '1.8.0' // 确保这是您需要的版本
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
@@ -67,4 +69,5 @@ flutter {
 
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
