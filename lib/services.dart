@@ -8,6 +8,7 @@ class AppGlobalServices extends GetConnect {
   @override
   void onInit() {
     super.onInit();
+    print('AppGlobalServices初始化');
     httpClient.baseUrl = globalBaseUrl;
     if (UserData.getInstance.userData?.t != null) {
       httpClient.addRequestModifier<dynamic>((request) {
@@ -29,8 +30,9 @@ class AppGlobalServices extends GetConnect {
   ///获取用户漫画阅读历史
   Future<ComicChapterListItem> getComicStorage([String? id]) async {
     String url = '/user/hcomicStorage';
+    print(url);
     final res = await get(url, query: {'id': id});
-    if (res.hasError) return Future.error(Exception(res.statusCode));
+    // if (res.hasError) return Future.error(Exception(res.statusCode));
     return ComicChapterListItem.fromJson(res.body['data'][0]);
   }
 
@@ -50,7 +52,7 @@ class AppGlobalServices extends GetConnect {
     final queryParams = {
       ...comicStorageModel.toMap(), // 通过扩展运算符将 GetComicParameter 转换为 Map
     };
-    print(queryParams);
+
     final res = await post(url, queryParams);
     if (res.hasError) return Future.error(Exception(res.statusCode));
     return ComicResponse.fromJson(res.body);
