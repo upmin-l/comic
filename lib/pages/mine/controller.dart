@@ -27,10 +27,11 @@ class MinePageController extends GetxController {
   //客服qq
   CustomerModel customer = CustomerModel.fromJson({});
 
-  LoginServices loginServices = Get.put(LoginServices());
-
   // banner 图， 埋点，后期有广告可以打进来
   CustomerModel bannerRes = CustomerModel.fromJson({});
+
+  // 支付宝收款
+  CustomerModel alipayRes = CustomerModel.fromJson({});
 
   /// 拦截登录界面，表示用户是否已经登录了
   bool isLogin = false;
@@ -53,13 +54,33 @@ class MinePageController extends GetxController {
     });
   }
 
+  Future getAlipay() async {
+    appGlobalServices
+        .getCustomer('alipay', initPageController.version)
+        .then((value) {
+      bannerRes = value;
+    });
+  }
+
   Future<void> onOpenUrl(String url) async {
-    Uri uri = Uri.parse('https://qm.qq.com/cgi-bin/qm/qr?k=$url');
+    Uri uri = Uri.parse(url);
     if (!await canLaunchUrl(uri)) throw Exception('错误');
 
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       throw Exception('无法唤起 QQ，请检查 QQ 是否安装');
     }
+  }
+
+  Future<void> activate(context) async {
+    BrnLoadingDialog.show(context,
+        content: '正在获取激活接口...', barrierDismissible: false);
+    appGlobalServices
+        .getCustomer('alipay', initPageController.version)
+        .then((value) {
+      BrnLoadingDialog.dismiss(context);
+      onOpenUrl(value.tap_url);
+    });
+    // onOpenUrl('https://ur.alipay.com/_mYBZZSMXEF4wuGTY6hySi');
   }
 
   @override
@@ -86,9 +107,9 @@ class MinePageController extends GetxController {
 
   Future refreshUser() async {
     TokenModel tokenModel = TokenModel(
-      user: userData.user ,
-      id: userData.id ,
-      t: userData.t ,
+      user: userData.user,
+      id: userData.id,
+      t: userData.t,
     );
     userData = UserModel.fromJson({});
     UserData.getInstance.clear();
@@ -111,7 +132,7 @@ class MinePageController extends GetxController {
         Navigator.pop(context);
       },
       onConfirm: () {
-        appGlobalServices.unbind(userData.id).then((value){
+        appGlobalServices.unbind(userData.id).then((value) {
           userData = UserModel.fromJson({});
           UserData.getInstance.clear();
           isLogin = false;
@@ -123,7 +144,7 @@ class MinePageController extends GetxController {
           Navigator.pop(context);
           Navigator.pop(context);
           initData();
-        }).catchError((err){
+        }).catchError((err) {
           BrnToast.show(err, context);
         });
       },
@@ -177,7 +198,7 @@ class MinePageController extends GetxController {
             Navigator.pop(context);
           },
           onConfirm: () {
-            appGlobalServices.unbind(userData.id).then((value){
+            appGlobalServices.unbind(userData.id).then((value) {
               userData = UserModel.fromJson({});
               UserData.getInstance.clear();
               isLogin = false;
@@ -186,7 +207,7 @@ class MinePageController extends GetxController {
               Navigator.pop(context);
               bookshelfPageController.updateUserData();
               initData();
-            }).catchError((err){
+            }).catchError((err) {
               BrnToast.show("解绑失败！请联系客服！", context);
             });
           },

@@ -51,13 +51,9 @@ class MinePage extends GetView<MinePageController> {
                 // 用户信息
                 SliverToBoxAdapter(
                   child: userInfo(
-                    context,
-                    controller.userData,
-                    controller.isLogin,
-                    () {
-                      controller.refreshUser();
-                    },
-                  ),
+                      context, controller.userData, controller.isLogin, () {
+                    controller.refreshUser();
+                  }, controller),
                 ),
                 SliverToBoxAdapter(
                   child: controller.bannerRes.show_url != ''
@@ -86,7 +82,6 @@ class MinePage extends GetView<MinePageController> {
                     ),
                   ),
                 ),
-
                 SliverToBoxAdapter(
                   child: Container(
                     margin: EdgeInsets.only(top: 12.sp),
@@ -112,7 +107,7 @@ class MinePage extends GetView<MinePageController> {
                             ),
                           ),
                           onTap: () {
-                            controller.onOpenUrl(controller.customer.tap_url);
+                            controller.onOpenUrl('https://qm.qq.com/cgi-bin/qm/qr?k=${controller.customer.tap_url}');
                           },
                         ),
                         Padding(

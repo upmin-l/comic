@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-Widget userInfo(context,UserModel data,bool isLogin,Function onTap){
+import '../controller.dart';
+
+Widget userInfo(context,UserModel data,bool isLogin,Function onTap,MinePageController controller){
   return Container(
     decoration: const BoxDecoration(
       gradient: LinearGradient(
@@ -76,7 +78,9 @@ Widget userInfo(context,UserModel data,bool isLogin,Function onTap){
                         const Text('账号未激活'),
                         const SizedBox(width: 4.0),
                         OutlinedButton(
-                          onPressed: () {  },
+                          onPressed: () {
+                            controller.activate(context);
+                          },
                           style: OutlinedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
