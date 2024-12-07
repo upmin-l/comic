@@ -107,7 +107,7 @@ class MinePage extends GetView<MinePageController> {
                             ),
                           ),
                           onTap: () {
-                            controller.onOpenUrl('https://qm.qq.com/cgi-bin/qm/qr?k=${controller.customer.tap_url}');
+                            controller.onOpenUrl(controller.customer.tap_url);
                           },
                         ),
                         Padding(
