@@ -25,7 +25,7 @@ class CommonTags extends StatelessWidget {
         nameArr.length,
         (index) {
           return Padding(
-            padding: EdgeInsets.only(right: 2.w),
+            padding: EdgeInsets.only(right: 1.w),
             child: Container(
               decoration: BoxDecoration(
                 color: isShowBg

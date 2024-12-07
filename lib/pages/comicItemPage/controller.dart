@@ -56,35 +56,6 @@ class ComicItemPageController extends GetxController
   void onInit() {
     super.onInit();
     logOn = UserData.getInstance.userData?.t != null;
-    // webViewController = WebViewController()
-    //   ..setJavaScriptMode(JavaScriptMode.unrestricted)
-    //   ..addJavaScriptChannel(
-    //     'getInfo',
-    //     onMessageReceived: (JavaScriptMessage message) async {
-    //       final jsonMap = jsonDecode(message.message);
-    //       comicInfoName = jsonMap['name'];
-    //       comicInfoState = jsonMap['state'];
-    //       initData();
-    //     },
-    //   )
-    //   ..setNavigationDelegate(NavigationDelegate(onPageFinished: (controller) {
-    //     webViewController.runJavaScript('''
-    //             function getComicInfo(){
-    //               const obj = {name:'',state:''};
-    //               obj.name = document.querySelector('.comics-detail__desc')?.textContent.trim()||'无法获取漫画,请尝试切换路线或换源。。。';
-    //               obj.state = document.querySelector('.comics-detail .l-content .comics-detail__info .tag-list .tag').textContent.trim()||'未知';
-    //               return JSON.stringify(obj);
-    //             }
-    //             getInfo.postMessage(getComicInfo());
-    //         ''');
-    //   }))
-    //   ..loadRequest(
-    //       Uri.parse('https://cn.baozimh.com/comic/${comicItem.comic_id}'));
-    // if(comicInfoName!='无法获取漫画,请尝试切换路线或换源。。。') {
-    //
-    //
-    // }
-
     getChapter().then((value) {
       getComicStorage();
     });
@@ -195,7 +166,7 @@ class ComicItemPageController extends GetxController
         }),
       )
       ..loadRequest(
-          Uri.parse('https://cn.baozimh.com/comic/${comicItem.comic_id}'));
+          Uri.parse('https://cn.czmanga.com/comic/${comicItem.comic_id}'));
   }
 
   /// 获取单个漫画阅读历史
@@ -219,7 +190,7 @@ class ComicItemPageController extends GetxController
         }
         initData();
       });
-    } else {}
+    }
   }
 
   Future initSetComicStorage() async {

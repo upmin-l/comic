@@ -76,4 +76,15 @@ class AppGlobalServices extends GetConnect {
     final res = await post(url, {'type': "app", "version": version});
     if (res.hasError) return Future.error(Exception(res.statusCode));
   }
+
+  /// 解绑设备id
+  Future unbind(String id) async {
+    try{
+      String url = '/user/unbind';
+      final res = await post(url, {"id": id});
+      if (res.hasError) return Future.error(Exception(res.statusCode));
+    }catch(err){
+      return Future.error(err);
+    }
+  }
 }

@@ -15,11 +15,13 @@ class LoginServices extends GetConnect {
   Future<ResponseModel> signIn(
     String user,
     String paw,
+      String d,
   ) async {
     String url = '/user/login';
     final res = await post(url, {
       "user": user,
       "paw": paw,
+      "d":d,
     });
 
     if (res.hasError) return Future.error(Exception(res.statusCode));

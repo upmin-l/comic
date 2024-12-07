@@ -142,6 +142,7 @@ class ComicPageController extends GetxController
     String idx = tabIdx.toString();
     comicList = [];
     getComicParameter.type =res[idx]!;
+    getComicParameter.page = 1;
     getComicList();
   }
 
@@ -156,7 +157,7 @@ class ComicPageController extends GetxController
     initData();
     getComicParameter.type = type;
     getComicParameter.region = reg;
-
+    getComicParameter.page = 1;
     String key = findKeyByValue(res, type);
     if(key!=''){
       topTabController.index = int.parse(key);
@@ -164,12 +165,13 @@ class ComicPageController extends GetxController
     }else{
       currentLabelColor = Colors.grey.shade400;
     }
+    comicList = [];
     getComicList();
   }
 
 
   Future getComicList() async {
-    comicList = [];
+    // comicList = [];
     comicServices.getComicList(getComicParameter).then((value) {
       ComicList comicListMode = ComicList.toJson(value);
       if(comicListMode.list.isNotEmpty){

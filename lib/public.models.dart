@@ -256,6 +256,7 @@ class UserModel {
   final String authPhoto;
   final String id;
   final String type;
+  final String d;
 
   UserModel({
     required this.user,
@@ -263,6 +264,7 @@ class UserModel {
     required this.authPhoto,
     required this.id,
     required this.type,
+    required this.d,
   });
 
   UserModel.fromJson(Map<String, dynamic> item)
@@ -270,6 +272,7 @@ class UserModel {
         t = item['t'] ?? '',
         id = item['id'] ?? '',
         type = item['type'] ?? 'no',
+        d = item['d'] ?? '',
         authPhoto = item['authPhoto'] ?? '';
 
   Map<String, dynamic> toJson() {
@@ -279,6 +282,7 @@ class UserModel {
       'authPhoto': authPhoto,
       'type': type,
       'id': id,
+      "d": d,
     };
   }
 }

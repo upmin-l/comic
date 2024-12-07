@@ -12,6 +12,7 @@ import 'services.dart';
 class LoginPageController extends GetxController {
   final loginServices = Get.find<LoginServices>();
   final initPageController = Get.find<InitPageController>();
+  final deviceInfo = DeviceInfoPlugin();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController pawController = TextEditingController();
@@ -21,8 +22,10 @@ class LoginPageController extends GetxController {
   final TextEditingController registerEmailController = TextEditingController();
   final TextEditingController registerPawController = TextEditingController();
   final TextEditingController registerConfirmPawController = TextEditingController();
+
   bool nextRegister = false;
   bool showPinPut = false;
+  bool showLoading = false;
   late String pinPut = '1';
 
   final formKey = GlobalKey<FormState>();
@@ -41,12 +44,24 @@ class LoginPageController extends GetxController {
   }
 
   Future<void> login(context) async {
+    showLoading = true;
+    String deviceId = '';
+    if (Theme.of(context).platform == TargetPlatform.android) {
+      // Android
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      deviceId = androidInfo.id; // 获取Android设备ID
+    } else if (Theme.of(context).platform == TargetPlatform.iOS) {
+      // iOS
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      deviceId = iosInfo.identifierForVendor ?? ''; // 获取iOS设备唯一标识
+    }
+
     loginServices
-        .signIn(emailController.text, pawController.text)
+        .signIn(emailController.text, pawController.text,deviceId)
         .then((value) {
       if (value.code == 200) {
+        showLoading = false;
         UserData.getInstance.setUserData = value.data;
-
         /// 登录成功后取消校验
         initPageController.isFirstTime =true;
         //发送消息更新我的页面显示内容
@@ -64,8 +79,6 @@ class LoginPageController extends GetxController {
 
   ///注册
   Future register(context)async{
-    var deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     if(pinPut!='1'){
       try{
         String deviceId = '';

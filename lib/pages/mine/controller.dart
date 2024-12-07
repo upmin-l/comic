@@ -94,7 +94,6 @@ class MinePageController extends GetxController {
     UserData.getInstance.clear();
 
     appGlobalServices.getValidateToken(tokenModel).then((value) {
-      print('getValidateToken${value.type}');
       UserData.getInstance.setUserData = value;
       userData = UserData.getInstance.userData!;
       initData();
@@ -112,17 +111,21 @@ class MinePageController extends GetxController {
         Navigator.pop(context);
       },
       onConfirm: () {
-        userData = UserModel.fromJson({});
-        UserData.getInstance.clear();
-        isLogin = false;
-        BrnToast.show("退出成功！", context);
-        bookshelfPageController.updateUserData();
+        appGlobalServices.unbind(userData.id).then((value){
+          userData = UserModel.fromJson({});
+          UserData.getInstance.clear();
+          isLogin = false;
+          BrnToast.show("退出成功！", context);
+          bookshelfPageController.updateUserData();
 
-        ///当退出登录后进行锁定，不能跳到阅读页面
-        initPageController.isFirstTime = false;
-        Navigator.pop(context);
-        Navigator.pop(context);
-        initData();
+          ///当退出登录后进行锁定，不能跳到阅读页面
+          initPageController.isFirstTime = false;
+          Navigator.pop(context);
+          Navigator.pop(context);
+          initData();
+        }).catchError((err){
+          BrnToast.show(err, context);
+        });
       },
     );
   }
@@ -133,6 +136,7 @@ class MinePageController extends GetxController {
       return [
         ListData(name: '用户ID', msg: userData.id, id: 35),
         ListData(name: '邀请码', msg: '', id: 32),
+        ListData(name: '设备ID', msg: userData.d, id: 32),
         ListData(name: '修改登录密码', shouEndIcon: true, id: 65),
       ];
     }
@@ -159,6 +163,32 @@ class MinePageController extends GetxController {
             DefaultCacheManager().emptyCache();
             BrnToast.show("清理成功！", context);
             Navigator.pop(context);
+          },
+        );
+        break;
+      case 32:
+        BrunoDialog.showConfirmDialog(
+          context,
+          title: '确定解绑',
+          msg: '是否确定解绑此设备？',
+          confirm: '确定',
+          tip: '',
+          onCancel: () {
+            Navigator.pop(context);
+          },
+          onConfirm: () {
+            appGlobalServices.unbind(userData.id).then((value){
+              userData = UserModel.fromJson({});
+              UserData.getInstance.clear();
+              isLogin = false;
+              BrnToast.show("解绑成功！", context);
+              Navigator.pop(context);
+              Navigator.pop(context);
+              bookshelfPageController.updateUserData();
+              initData();
+            }).catchError((err){
+              BrnToast.show("解绑失败！请联系客服！", context);
+            });
           },
         );
         break;

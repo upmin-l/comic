@@ -48,10 +48,10 @@ class ComicPage extends GetView<ComicPageController> {
                         ),
                       ),
                     ),
-                     Expanded(
+                    Expanded(
                       child: SearchTop(
                         isType: 'comic',
-                        onTap: (){
+                        onTap: () {
                           Get.toNamed(RouteNames.searchPage);
                         },
                       ),
@@ -99,10 +99,9 @@ class ComicPage extends GetView<ComicPageController> {
                               return ModalList(
                                 comicShowModeList: controller.comicShowModeList,
                                 comicParameter: controller.getComicParameter,
-                                onTap: (region,type){
-                                  controller.handleFilter(region,type);
+                                onTap: (region, type) {
+                                  controller.handleFilter(region, type);
                                 },
-
                               );
                             },
                           );
@@ -121,104 +120,85 @@ class ComicPage extends GetView<ComicPageController> {
             ),
             backgroundColor: Colors.white,
           ),
-          body: controller.comicPageLoading?
-          Container(
-            color: Colors.white.withOpacity(0.2),
-            width: double.infinity,
-            height: double.infinity,
-            child: Center(
-              child: LoadingAnimationWidget.hexagonDots(
-                color: AppColor.defaultColor,
-                size: 40,
-              ),
-            ),
-          )
-          :Padding(
-            padding: EdgeInsets.symmetric(vertical: 3.w, horizontal: 5.h),
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (scrollNotification) {
-                if (scrollNotification is ScrollStartNotification ||
-                    scrollNotification is ScrollUpdateNotification) {
-                  // 用户正在滚动，可以在这里处理逻辑
-                } else if (scrollNotification is ScrollEndNotification) {
-                  // 用户滚动结束，可以在这里处理逻辑
-                  if (scrollNotification.metrics.pixels ==
-                      scrollNotification.metrics.maxScrollExtent) {
-                    // 滚动到底部，加载更多数据
-                    controller.getComicParameter.page++;
-                    controller.getComicList();
-                  }
-                }
-                return true;
-              },
-              child: RefreshIndicator(
-                color: AppColor.defaultColor,
-                onRefresh: () async {
-                  // controller.comicList =
-                  //     pickRandomComicItems(controller.comicList, 36).toList();
-                  // await Future.delayed(const Duration(seconds: 2));
-                  // controller.initData();
-                },
-                child: CustomScrollView(
-                  controller: controller.comicScrollController,
-                  slivers: [
-                    SliverGrid(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        childAspectRatio: 0.6,
-                        crossAxisSpacing: 5,
-                        mainAxisSpacing: 3.0,
+          body: controller.comicPageLoading
+              ? Container(
+                  color: Colors.white.withOpacity(0.2),
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Center(
+                    child: LoadingAnimationWidget.hexagonDots(
+                      color: AppColor.defaultColor,
+                      size: 40,
+                    ),
+                  ),
+                )
+              : Padding(
+                  padding: EdgeInsets.symmetric(vertical: 3.w, horizontal: 5.h),
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (scrollNotification) {
+                      if (scrollNotification is ScrollStartNotification ||
+                          scrollNotification is ScrollUpdateNotification) {
+                        // 用户正在滚动，可以在这里处理逻辑
+                      } else if (scrollNotification is ScrollEndNotification) {
+                        // 用户滚动结束，可以在这里处理逻辑
+                        if (scrollNotification.metrics.pixels ==
+                            scrollNotification.metrics.maxScrollExtent) {
+                          // 滚动到底部，加载更多数据
+                          controller.getComicParameter.page++;
+                          controller.getComicList();
+                        }
+                      }
+                      return true;
+                    },
+                    child: RefreshIndicator(
+                      color: AppColor.defaultColor,
+                      onRefresh: () async {
+                        // controller.comicList =
+                        //     pickRandomComicItems(controller.comicList, 36).toList();
+                        // await Future.delayed(const Duration(seconds: 2));
+                        // controller.initData();
+                      },
+                      child: CustomScrollView(
+                        controller: controller.comicScrollController,
+                        slivers: [
+                          SliverGrid(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              childAspectRatio: 0.6,
+                              crossAxisSpacing: 5,
+                              mainAxisSpacing: 3.0,
+                            ),
+                            delegate: SliverChildBuilderDelegate(
+                              childCount: controller.comicList.length,
+                              (context, index) {
+                                return GridViewList<ComicItem>(
+                                  pathUrl: '/comicItemPage',
+                                  item: controller.comicList[index],
+                                  getName: (item) => item.name,
+                                  getTopicImg: (item) => item.topic_img,
+                                  getTypeNames: (item) => item.type_names,
+                                );
+                              },
+                            ),
+                          )
+                        ],
                       ),
-                      delegate: SliverChildBuilderDelegate(
-                        childCount: controller.comicList.length,
-                        (context, index) {
-                          return GridViewList<ComicItem>(
-                            pathUrl: '/comicItemPage',
-                            item: controller.comicList[index],
-                            getName: (item) => item.name,
-                            getTopicImg: (item) => item.topic_img,
-                            getTypeNames: (item) => item.type_names,
-                          );
-                        },
-                      ),
-                    )
-                  ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
           floatingActionButton: FloatingActionButton(
             // splashColor: Colors.cyanAccent,
             backgroundColor: Colors.white,
             // elevation: 0,
             onPressed: () {
               controller.comicScrollController.jumpTo(0);
-              // showModalBottomSheet(
-              //   context: context,
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.only(
-              //       topLeft: Radius.circular(20.w),
-              //       topRight: Radius.circular(20.w),
-              //     ),
-              //   ),
-              //   builder: (BuildContext context) {
-              //     // return ShowModal(
-              //     //   index: 2,
-              //     //   onEvent: (idx) {
-              //     //     print(idx);
-              //     //   },
-              //     // );
-              //     return Container();
-              //   },
-              // );
             },
-            child:  Center(
-              child: Image(
-                image: const AssetImage('assets/images/back_to_top.png'),
-                fit: BoxFit.cover,
-                width: 30.w,
-                height: 30.h,
+            child: Align(
+              child: Icon(
+                Icons.rocket,
+                color: AppColor.defaultColor,
+                size: 30.sp,
               ),
             ),
           ),

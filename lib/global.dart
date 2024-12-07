@@ -2,9 +2,13 @@
 import 'dart:async';
 
 import 'package:comic/public.models.dart';
-  import 'package:get_storage/get_storage.dart';
+import 'package:get_storage/get_storage.dart';
 
-const String globalBaseUrl = 'https://s.ziyuanniu.top';
+/// 线上环境
+// const String globalBaseUrl = 'https://s.ziyuanniu.top';
+
+//本地环境
+const String globalBaseUrl = 'http://192.168.1.7:3000';
 
 // const bzmList  = 'https://cn.baozimh.com/api/bzmhq/amp_comic_list';  // 包子漫画
 
